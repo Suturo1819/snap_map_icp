@@ -76,6 +76,7 @@ double SCAN_RATE = 2;
 
 std::string BASE_LASER_FRAME = "/base_laser_link";
 std::string ODOM_FRAME = "/odom_combined";
+std::string INITIALPOSE = "/initialpose";
 
 ros::NodeHandle *nh = 0;
 ros::Publisher pub_output_;
@@ -324,7 +325,7 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_in)
             try
             {
                 gotTransform = true;
-                listener_->transformPointCloud ("/map",cloud,cloudInMap);
+                listener_->transformPointCloud ("/map",cloud, cloudInMap);
             }
             catch (...)
             {
@@ -524,6 +525,7 @@ int main(int argc, char** argv)
 
     nh->param<std::string>("odom_frame", ODOM_FRAME, "/odom_combined");
     nh->param<std::string>("base_laser_frame", BASE_LASER_FRAME, "/base_laser_link");
+    nh->param<std::string>("initialpose", INITIALPOSE, "/initialpose");
 
     last_processed_scan = ros::Time::now();
 
@@ -535,10 +537,10 @@ int main(int argc, char** argv)
     pub_output_ = nh->advertise<sensor_msgs::PointCloud2> ("map_points", 1);
     pub_output_scan = nh->advertise<sensor_msgs::PointCloud2> ("scan_points", 1);
     pub_output_scan_transformed = nh->advertise<sensor_msgs::PointCloud2> ("scan_points_transformed", 1);
-    pub_pose = nh->advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1);
+    pub_pose = nh->advertise<geometry_msgs::PoseWithCovarianceStamped>(INITIALPOSE, 1);
 
-    ros::Subscriber subMap = nh_.subscribe("map", 1, mapCallback);
-    ros::Subscriber subScan = nh_.subscribe("base_scan", 1, scanCallback);
+    ros::Subscriber subMap = nh_.subscribe("/map", 1, mapCallback);
+    ros::Subscriber subScan = nh_.subscribe("/hsrb/base_scan", 1, scanCallback);
 
     ros::Rate loop_rate(5);
 
