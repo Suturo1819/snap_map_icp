@@ -14,10 +14,10 @@
 
     <!-- thresholds over distance btw amcl icp pose to trigger pose publishing -->
     <!-- translation -->
-    <param name="dist_threshold" value="0.01"/>
+    <param name="dist_threshold" value="0.005"/>
     <!-- rotation -->
-    <param name="angle_threshold" value="0.01"/>
-    <param name="angle_upper_threshold" value="1"/>
+    <param name="angle_threshold" value="0.005"/>
+    <param name="angle_upper_threshold" value="0.1"/>
 
     <!-- various icp parameters -->
     <!-- consult with icp algorithm from pcl for details -->
